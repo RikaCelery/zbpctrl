@@ -121,7 +121,9 @@ func (m *Control[CTX]) IsEnabledIn(gid int64) bool {
 		m.Manager.RUnlock()
 		m.Manager.Lock()
 		if err == nil && c.GroupID == 0 {
-			if c.Disable&1 == 0 {
+			if (c.Disable&1 == 0) == m.Options.DisableOnDefault {
+				isdisable = 2
+			} else if c.Disable&1 == 0 {
 				isdisable = 0
 			} else {
 				isdisable = 1
@@ -135,7 +137,7 @@ func (m *Control[CTX]) IsEnabledIn(gid int64) bool {
 		log.Debugf("[control] cache plugin %s of all : %v", m.Service, isdisable)
 	}
 
-	if isdisable != 2 && ok {
+	if isdisable != 2 {
 		return isdisable == 0
 	}
 
