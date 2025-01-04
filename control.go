@@ -121,7 +121,8 @@ func (m *Control[CTX]) IsEnabledIn(gid int64) bool {
 		m.Manager.RUnlock()
 		m.Manager.Lock()
 		if err == nil && c.GroupID == 0 {
-			if (c.Disable&1 == 0) == m.Options.DisableOnDefault {
+			log.Errorf("%s c %v plugin: %v", m.Service, c.Disable&1 == 1, m.Options.DisableOnDefault)
+			if (c.Disable&1 == 1) == m.Options.DisableOnDefault {
 				isdisable = 2
 			} else if c.Disable&1 == 0 {
 				isdisable = 0
